@@ -23,11 +23,11 @@ const OAuth = () => {
         body: JSON.stringify({
           name: resultFromGoogle.user.displayName,
           email: resultFromGoogle.user.email,
-          passsword: resultFromGoogle.user.photoURL,
+          profilePicture: resultFromGoogle.user.photoURL, // Ensure this field is correct
         })
       })
       const data = await res.json()
-      console.log(res, 'response dound')
+      console.log(res, 'response found')
       if (res.ok) {
         dispatch(signInSuccess(data))
         navigate('/')

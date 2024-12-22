@@ -54,7 +54,9 @@ export const signIn = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
     //return User if success else data.message
-    const { email, name, photoUrl } = req.body
+    const { email, name, profilePicture } = req.body
+    console.log(profilePicture, 'dp inside controller')
+    // console.log(photoURL, 'find the url ohoto here')
     try {
         //find the user
         const user = await User.findOne({ email })
@@ -70,11 +72,12 @@ export const google = async (req, res, next) => {
         else {
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random.toString(36).slice(-8)
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            console.log(profilePicture, 'dp inside controller else case')
             const newUser = new User({
                 username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
                 email,
                 password: hashedPassword,
-                profilePicture: photoUrl,
+                profilePicture: profilePicture,
             })
             await newUser.save()
             console.log('user came', newUser)
