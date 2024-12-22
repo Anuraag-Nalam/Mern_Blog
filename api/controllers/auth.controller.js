@@ -51,3 +51,41 @@ export const signIn = async (req, res, next) => {
         next(error);
     }
 }
+
+export const google = async (req, res, next) => {
+    //return User if success else data.message
+    const { email, name, photoUrl } = req.body
+    try {
+        //find the user
+        const user = await User.findOne({ email })
+        console.log('user not found ', user)
+        if (user) {
+            // console.log('user came1', newUser)
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+            const { password, ...rest } = user._doc
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
+        }
+        else {
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random.toString(36).slice(-8)
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            const newUser = new User({
+                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
+                email,
+                password: hashedPassword,
+                profilePicture: photoUrl,
+            })
+            await newUser.save()
+            console.log('user came', newUser)
+            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
+            const { password, ...rest } = newUser._doc
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
+        }
+    }
+    catch (e) {
+        console.log('some error', e)
+    }
+}
