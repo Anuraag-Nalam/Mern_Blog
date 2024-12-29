@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateStart, updateSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userSlice';
+import { updateFailure, updateStart, updateSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
@@ -142,6 +142,26 @@ const DashProfile = () => {
         }
     }
 
+    const handleSignOut = async () => {
+        try {
+            const respose = await fetch('/api/user/signout', {
+                method: 'POST',
+            }
+            )
+            const data = await respose.json()
+            console.log(data, 'check data')
+            if (!respose.ok) {
+                console.log(data.message)
+            }
+            else {
+                dispatch(signOutSuccess())
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div className="max-w-lg mx-auto p-3 w-full">
             <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -189,7 +209,7 @@ const DashProfile = () => {
             <div className="text-red-500 flex justify-between mt-5">
                 <span
                     onClick={() => setShowModal(true)} className="cursor-pointer">Delete Account</span>
-                <span className="cursor-pointer">Sign Out</span>
+                <span onClick={handleSignOut} className="cursor-pointer">Sign Out</span>
             </div>
             {updateUserSuccess && (
                 <Alert color='success' className='mt-5'>
