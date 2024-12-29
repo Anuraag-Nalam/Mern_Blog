@@ -24,8 +24,9 @@ export const signUp = async (req, res, next) => {
 
 export const signIn = async (req, res, next) => {
     const { email, password } = req.body;
+    console.log(email, password, 'check creds here')
     if (!email || !password || email == '' || password == '') {
-        next(errorHandler(400, 'All Fields are required'))
+        next(errorHandler(500, 'All Fields are required here'))
     }
     try {
         const validUser = await User.findOne({ email })
