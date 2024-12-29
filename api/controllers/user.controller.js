@@ -1,5 +1,6 @@
 import User from "../models/user.model.js"
 import { errorHandler } from "../utils/error.js"
+import bcryptjs from 'bcryptjs'
 
 export const test = (req, res) => {
     res.json({ message: 'API working' })
@@ -29,25 +30,25 @@ export const updateUser = async (req, res, next) => {
             return (next(errorHandler(400, 'Username should only have lower case characters')))
         }
         if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
-            return (next(errorHandler(400, 'Username should only have lower case characters')))
+            return next(errorHandler(400, 'Username should only have lower case characters'))
         }
-        try {
-            const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
-                $set: {
-                    username: req.body.username,
-                    email: req.body.email,
-                    password: req.body.password,
-                    profilePicture: req.body.profilePicture
-                }
-            }, {
-                new: true
+    }
+    try {
+        const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
+            $set: {
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                profilePicture: req.body.profilePicture
             }
-            )
-            const { password, ...rest } = updatedUser._doc
-            res.status(200).json(rest)
+        }, {
+            new: true
         }
-        catch (err) {
-            next(err)
-        }
+        )
+        const { password, ...rest } = updatedUser._doc
+        res.status(200).json(rest)
+    }
+    catch (err) {
+        next(err)
     }
 }

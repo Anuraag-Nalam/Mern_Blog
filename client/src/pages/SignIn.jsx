@@ -41,6 +41,7 @@ export default function SignIn() {
             dispatch(signInFailure(error.message));
         }
     };
+    console.log(errorMessage, 'error found here')
     return (
         <div className='min-h-screen mt-20'>
             <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
@@ -103,7 +104,7 @@ export default function SignIn() {
                     </div>
                     {errorMessage && (
                         <Alert className='mt-5' color='failure'>
-                            {errorMessage}
+                            {errorMessage.message}
                         </Alert>
                     )}
                 </div>
