@@ -26,8 +26,8 @@ const OAuth = () => {
           profilePicture: resultFromGoogle.user.photoURL, // Ensure this field is correct
         })
       })
-      const data = await res.json()
       console.log(res, 'response found')
+      const data = await res.json()
       if (res.ok) {
         dispatch(signInSuccess(data))
         navigate('/')

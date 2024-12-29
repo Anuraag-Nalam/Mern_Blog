@@ -11,7 +11,7 @@ export default function Header() {
     const dispatch = useDispatch()
     // const toggleThemeObject = useSelector((state) => state.theme)
     const location = useLocation().pathname
-
+    console.log('profile pic of the user ', currentUser.profilePicture)
     return (
         <Navbar className='border-b-2'>
             <Link

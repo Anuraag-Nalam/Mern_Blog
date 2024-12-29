@@ -60,7 +60,7 @@ export const google = async (req, res, next) => {
     try {
         //find the user
         const user = await User.findOne({ email })
-        console.log('user not found ', user)
+        console.log('user found ', user)
         if (user) {
             // console.log('user came1', newUser)
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
