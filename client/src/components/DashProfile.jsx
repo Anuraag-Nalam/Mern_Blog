@@ -2,13 +2,14 @@ import { TextInput, Button, Alert, Modal } from 'flowbite-react';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import { Link } from 'react-router-dom'
 import 'react-circular-progressbar/dist/styles.css';
 import { updateFailure, updateStart, updateSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 const DashProfile = () => {
-    const { currentUser, error } = useSelector(state => state.user);
+    const { currentUser, error, loading } = useSelector(state => state.user);
     const fileRef = useRef();
     const dispatch = useDispatch()
     const [imageFileError, setImageFileError] = useState(null);
@@ -202,9 +203,21 @@ const DashProfile = () => {
                 <TextInput onChange={handleFormChange} type="text" id="username" placeholder="username" defaultValue={currentUser.username} />
                 <TextInput onChange={handleFormChange} type="email" id="email" placeholder="email" defaultValue={currentUser.email} />
                 <TextInput onChange={handleFormChange} type="password" id="password" placeholder="password" />
-                <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-                    Update
+                <Button type="submit" gradientDuoTone="purpleToBlue" outline
+                    disabled={loading || imageFileUploading}>
+                    {loading ? 'Loading...' : 'Update'}
                 </Button>
+                {currentUser.isAdmin && (
+                    <Link to={'/create-post'}>
+                        <Button
+                            type='button'
+                            gradientDuoTone='purpleToPink'
+                            className='w-full'
+                        >
+                            Create a post
+                        </Button>
+                    </Link>
+                )}
             </form>
             <div className="text-red-500 flex justify-between mt-5">
                 <span
