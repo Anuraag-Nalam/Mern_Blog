@@ -234,10 +234,16 @@ const DashProfile = () => {
                     {updateUserError}
                 </Alert>
             )}
-            {error && (
+            {error && typeof error === 'object' && Object.keys(error).length > 0 ? (
                 <Alert color='failure' className='mt-5'>
-                    {error}
+                    {error.message}
                 </Alert>
+            ) : (
+                error && (
+                    <Alert color='failure' className='mt-5'>
+                        {error}
+                    </Alert>
+                )
             )}
             <Modal
                 show={showModal}
