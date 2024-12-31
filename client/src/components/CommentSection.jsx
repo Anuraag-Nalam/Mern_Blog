@@ -1,13 +1,15 @@
 import { Alert, Button, Textarea, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Comment from './Comment'
 
 const CommentSection = ({ postId }) => {
     const { currentUser } = useSelector((state) => state.user)
     const [comments, setComments] = useState([])
     const [commentError, setCommentError] = useState(null)
-
+    const [allComments, setAllComments] = useState([])
+    // console.log(allComments)
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (comments.length > 200) {
@@ -29,15 +31,33 @@ const CommentSection = ({ postId }) => {
             if (res.ok) {
                 setComments('')
                 setCommentError(null)
+                setAllComments([data, ...allComments])
             }
         }
         catch (e) {
             setCommentError(e.message)
             console.log(e)
         }
-
         //send comment,postid and userid to backend
     }
+
+    useEffect(() => {
+        const getAllComments = async () => {
+            try {
+                const res = await fetch(`/api/comment/getPostComments/${postId}`)
+                const data = await res.json()
+                if (res.ok) {
+                    console.log(data, 'cgheck data here now')
+                    setAllComments(data);
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+        getAllComments()
+    }, [postId])
+
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {currentUser ? (
@@ -74,6 +94,27 @@ const CommentSection = ({ postId }) => {
                         {commentError}
                     </Alert>}
                 </form>
+            )}
+            {allComments.length === 0 ? (<p className='text-sm my-5'>
+                No comments yet!
+            </p>) : (
+                <>
+                    <div className='text-sm my-5 flex items-center gap-1'>
+                        <p>Comments</p>
+                        <div className="border border-gray-400 py-1 px-2 rounded-sm">
+                            <p>{allComments.length}</p>
+                        </div>
+                    </div>
+                    {
+                        allComments.map(comment => {
+                            return (
+                                <Comment
+                                    key={comment._id}
+                                    comment={comment} />
+                            )
+                        })
+                    }
+                </>
             )}
         </div>
     )
