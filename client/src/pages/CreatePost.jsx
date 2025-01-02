@@ -90,7 +90,7 @@ const CreatePost = () => {
             if (res.ok) {
                 setPublishError(null);
                 console.log('data saved')
-                navigate(`/post/${data.slug}`);
+                navigate(`/post/${data._id}/${data.slug}`);
             }
         } catch (error) {
             setPublishError('Something went wrong');

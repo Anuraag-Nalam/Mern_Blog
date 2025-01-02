@@ -6,17 +6,18 @@ import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
 
 export default function PostPage() {
-    const { postSlug } = useParams();
+    const { postId, postSlug } = useParams();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [post, setPost] = useState(null);
     const [recentPosts, setRecentPosts] = useState(null);
-
+    console.log(postId, postSlug, 'check the params')
     useEffect(() => {
         const fetchPost = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
+                // `/api/post/getposts?${postSlug ? `slug=${postSlug}&` : ''}postId=${postId}`
+                const res = await fetch(`/api/post/getposts?${postSlug ? `slug=${postSlug}&` : ''}postId=${postId}`);
                 const data = await res.json();
                 if (!res.ok) {
                     setError(true);
@@ -34,7 +35,7 @@ export default function PostPage() {
             }
         };
         fetchPost();
-    }, [postSlug]);
+    }, [postSlug, postId]);
 
     useEffect(() => {
         try {
